@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init *)",
+      "Bash(git --version)",
+      "Bash(git add *)",
+      "Bash(git -c user.email=yuriykadnykov@googlemail.com -c user.name=Maxim commit -m ' *)",
+      "Bash(npm --version)",
+      "Bash(pnpm --version)",
+      "Bash(rustc --version)",
+      "Bash(cargo --version)",
+      "Bash(npm install *)",
+      "Bash(npx tauri *)"
+    ]
+  }
+}

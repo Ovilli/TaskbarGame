@@ -9,3 +9,10 @@ Hey Claude , I want you to create an game for me . It plays itself in the Taskba
   5. Repo init now? git init, scaffold Tauri project, write README + LICENSE?
 
 Tauri is Completly Fine , An Tray icon is exactly what i though would match the Style , Play-Time-Growth, Pixel Art,Create An Git Repo      
+
+
+
+Used Tokens : 23.5K
+              +2.3k
+              
+
