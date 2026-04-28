@@ -10,7 +10,8 @@
       "Bash(rustc --version)",
       "Bash(cargo --version)",
       "Bash(npm install *)",
-      "Bash(npx tauri *)"
+      "Bash(npx tauri *)",
+      "Bash(taskkill //F //IM taskbar-garden.exe)"
     ]
   }
 }

@@ -7,71 +7,93 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="app">
-      <header class="topbar">
-        <div class="brand">Garden</div>
-        <div class="stats">
-          <span class="stat" title="Coins"><span class="pip pip-coin"></span><span id="coins">0</span></span>
-          <span class="stat" title="Seeds"><span class="pip pip-seed"></span><span id="seedCount">0</span></span>
+    <div id="app" class="app-shell entering">
+      <header class="titlebar" data-tauri-drag-region>
+        <div class="title" data-tauri-drag-region>
+          <span class="title-icon" aria-hidden="true"></span>
+          <span class="title-text" data-tauri-drag-region>TASKBAR GARDEN</span>
         </div>
-        <div class="actions">
-          <button id="btnShop" class="btn-icon" title="Shop">S</button>
-          <button id="btnSettings" class="btn-icon" title="Settings">=</button>
-          <button id="btnHide" class="btn-icon" title="Hide window">_</button>
-        </div>
+        <button id="btnHide" class="title-btn" title="Hide (Esc)">X</button>
       </header>
 
-      <main id="view-garden" class="view active">
-        <canvas id="garden" width="320" height="320" aria-label="Garden plots"></canvas>
-        <div class="hint" id="hint">Click an empty plot to plant. Click a grown flower to harvest.</div>
-      </main>
+      <div class="content">
+        <header class="topbar">
+          <span class="stat" title="Coins"><span class="pip pip-coin"></span><span id="coins">0</span></span>
+          <span class="stat" title="Seeds"><span class="pip pip-seed"></span><span id="seedCount">0</span></span>
+          <span class="stat" id="levelStat" title="Garden level">Lv 1</span>
+        </header>
 
-      <main id="view-shop" class="view">
-        <h2>Shop</h2>
-        <ul id="shopList" class="list"></ul>
-        <h3>Customer</h3>
-        <div id="customer" class="customer">No one is here yet.</div>
-      </main>
+        <main id="view-garden" class="view active">
+          <div class="seed-picker" id="seedPicker"></div>
 
-      <main id="view-settings" class="view">
-        <h2>Settings</h2>
-        <label class="row">
-          <span>Sound</span>
-          <input type="checkbox" id="optSound" />
-        </label>
-        <label class="row">
-          <span>Desktop notifications</span>
-          <input type="checkbox" id="optNotify" />
-        </label>
-        <label class="row">
-          <span>Window anchor</span>
-          <select id="optAnchor">
-            <option value="tray">Near tray icon</option>
-            <option value="bottom-right">Bottom right</option>
-            <option value="bottom-left">Bottom left</option>
-            <option value="top-right">Top right</option>
-            <option value="top-left">Top left</option>
-            <option value="center">Center</option>
-          </select>
-        </label>
-        <label class="row">
-          <span>Window size</span>
-          <select id="optSize">
-            <option value="small">Small (320x420)</option>
-            <option value="medium" selected>Medium (360x480)</option>
-            <option value="large">Large (420x560)</option>
-          </select>
-        </label>
-        <button id="btnReset" class="btn-secondary">Reset save</button>
-        <p class="muted">Save lives in your OS user data directory. Game pauses when window is hidden.</p>
-        <p class="muted">v<span id="appVersion">0.1.0</span> &middot; MIT licensed</p>
-      </main>
+          <div class="tool-bar">
+            <button class="tool" data-tool="plant" title="Plant (1)">
+              <span class="tool-icon tool-icon-plant"></span>
+              <span class="tool-label">PLANT</span>
+            </button>
+            <button class="tool" data-tool="water" title="Water (2) - hover plots">
+              <span class="tool-icon tool-icon-water"></span>
+              <span class="tool-label">WATER</span>
+            </button>
+            <button class="tool" data-tool="compost" title="Compost (3) - upgrade soil to RICH">
+              <span class="tool-icon tool-icon-compost"></span>
+              <span class="tool-label">SOIL</span>
+            </button>
+          </div>
 
-      <footer class="tabs">
-        <button class="tab active" data-view="garden">Garden</button>
-        <button class="tab" data-view="shop">Shop</button>
-        <button class="tab" data-view="settings">Settings</button>
-      </footer>
+          <div class="canvas-frame">
+            <canvas id="garden" width="240" height="240" aria-label="Garden plots"></canvas>
+          </div>
+
+          <div class="hint" id="hint">Pick seed, click plot to plant.</div>
+        </main>
+
+        <main id="view-shop" class="view">
+          <h2>SHOP</h2>
+          <ul id="shopList" class="list"></ul>
+          <h3>VISITOR</h3>
+          <div id="customer" class="customer">No one is here yet.</div>
+        </main>
+
+        <main id="view-settings" class="view">
+          <h2>SETTINGS</h2>
+          <label class="row">
+            <span>Sound</span>
+            <input type="checkbox" id="optSound" />
+          </label>
+          <label class="row">
+            <span>Notifications</span>
+            <input type="checkbox" id="optNotify" />
+          </label>
+          <label class="row">
+            <span>Anchor</span>
+            <select id="optAnchor">
+              <option value="tray">Near tray</option>
+              <option value="bottom-right">Bottom right</option>
+              <option value="bottom-left">Bottom left</option>
+              <option value="top-right">Top right</option>
+              <option value="top-left">Top left</option>
+              <option value="center">Center</option>
+            </select>
+          </label>
+          <label class="row">
+            <span>Window size</span>
+            <select id="optSize">
+              <option value="small">Small</option>
+              <option value="medium" selected>Medium</option>
+              <option value="large">Large</option>
+            </select>
+          </label>
+          <button id="btnReset" class="btn-secondary">RESET SAVE</button>
+          <p class="muted">v<span id="appVersion">0.1.0</span> &middot; MIT licensed &middot; local only</p>
+        </main>
+
+        <footer class="tabs">
+          <button class="tab active" data-view="garden">GARDEN</button>
+          <button class="tab" data-view="shop">SHOP</button>
+          <button class="tab" data-view="settings">CONFIG</button>
+        </footer>
+      </div>
     </div>
 
     <script type="module" src="main.js"></script>

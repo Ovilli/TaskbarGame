@@ -4,10 +4,7 @@
   "version": "0.1.0",
   "identifier": "io.github.taskbargame.garden",
   "build": {
-    "beforeDevCommand": "",
-    "beforeBuildCommand": "",
-    "frontendDist": "../src",
-    "devUrl": "http://localhost:1420"
+    "frontendDist": "../src"
   },
   "app": {
     "withGlobalTauri": true,
@@ -15,13 +12,14 @@
       {
         "label": "main",
         "title": "Taskbar Garden",
-        "width": 360,
+        "width": 340,
         "height": 480,
-        "minWidth": 320,
-        "minHeight": 420,
-        "resizable": true,
-        "decorations": true,
+        "minWidth": 300,
+        "minHeight": 440,
+        "resizable": false,
+        "decorations": false,
         "transparent": false,
+        "shadow": true,
         "alwaysOnTop": false,
         "skipTaskbar": true,
         "visible": false,
@@ -46,8 +44,5 @@
     "category": "Game",
     "shortDescription": "Cozy pixel-art garden in your tray",
     "longDescription": "Plant seeds, water flowers, sell to villagers. Quiet companion that lives in your system tray."
-  },
-  "plugins": {
-    "store": {}
   }
 }

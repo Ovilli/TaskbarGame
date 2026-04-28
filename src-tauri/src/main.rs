@@ -3,6 +3,7 @@
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
 use tauri::{
+    include_image,
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     AppHandle, Emitter, LogicalPosition, LogicalSize, Manager, PhysicalPosition, WindowEvent,
@@ -95,7 +96,31 @@ fn build_tray_menu(app: &AppHandle) -> tauri::Result<Menu<tauri::Wry>> {
     Menu::with_items(app, &[&show, &hide, &about, &quit])
 }
 
+fn install_panic_logger() {
+    let prev = std::panic::take_hook();
+    std::panic::set_hook(Box::new(move |info| {
+        let path = std::env::temp_dir().join("taskbar-garden-crash.log");
+        let msg = format!(
+            "[{}] panic: {}\n",
+            chrono_like_now(),
+            info
+        );
+        let _ = std::fs::write(&path, msg);
+        prev(info);
+    }));
+}
+
+fn chrono_like_now() -> String {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    let secs = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_secs())
+        .unwrap_or(0);
+    format!("epoch:{secs}")
+}
+
 fn main() {
+    install_panic_logger();
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::default().build())
         .manage(AppState::default())
@@ -118,7 +143,7 @@ fn main() {
 
             TrayIconBuilder::with_id("main-tray")
                 .tooltip("Taskbar Garden")
-                .icon(app.default_window_icon().cloned().ok_or("no default icon")?)
+                .icon(include_image!("icons/32x32.png"))
                 .menu(&menu)
                 .show_menu_on_left_click(false)
                 .on_menu_event(|app, event| match event.id().as_ref() {
