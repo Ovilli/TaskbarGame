@@ -1,0 +1,19 @@
+{
+  "name": "taskbar-garden",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Cozy pixel-art gardening game that lives in your system tray",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.1.0"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.1.0",
+    "@tauri-apps/plugin-store": "^2.1.0"
+  }
+}

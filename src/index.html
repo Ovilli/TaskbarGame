@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Taskbar Garden</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand">Garden</div>
+        <div class="stats">
+          <span class="stat" title="Coins"><span class="pip pip-coin"></span><span id="coins">0</span></span>
+          <span class="stat" title="Seeds"><span class="pip pip-seed"></span><span id="seedCount">0</span></span>
+        </div>
+        <div class="actions">
+          <button id="btnShop" class="btn-icon" title="Shop">S</button>
+          <button id="btnSettings" class="btn-icon" title="Settings">=</button>
+          <button id="btnHide" class="btn-icon" title="Hide window">_</button>
+        </div>
+      </header>
+
+      <main id="view-garden" class="view active">
+        <canvas id="garden" width="320" height="320" aria-label="Garden plots"></canvas>
+        <div class="hint" id="hint">Click an empty plot to plant. Click a grown flower to harvest.</div>
+      </main>
+
+      <main id="view-shop" class="view">
+        <h2>Shop</h2>
+        <ul id="shopList" class="list"></ul>
+        <h3>Customer</h3>
+        <div id="customer" class="customer">No one is here yet.</div>
+      </main>
+
+      <main id="view-settings" class="view">
+        <h2>Settings</h2>
+        <label class="row">
+          <span>Sound</span>
+          <input type="checkbox" id="optSound" />
+        </label>
+        <label class="row">
+          <span>Desktop notifications</span>
+          <input type="checkbox" id="optNotify" />
+        </label>
+        <label class="row">
+          <span>Window anchor</span>
+          <select id="optAnchor">
+            <option value="tray">Near tray icon</option>
+            <option value="bottom-right">Bottom right</option>
+            <option value="bottom-left">Bottom left</option>
+            <option value="top-right">Top right</option>
+            <option value="top-left">Top left</option>
+            <option value="center">Center</option>
+          </select>
+        </label>
+        <label class="row">
+          <span>Window size</span>
+          <select id="optSize">
+            <option value="small">Small (320x420)</option>
+            <option value="medium" selected>Medium (360x480)</option>
+            <option value="large">Large (420x560)</option>
+          </select>
+        </label>
+        <button id="btnReset" class="btn-secondary">Reset save</button>
+        <p class="muted">Save lives in your OS user data directory. Game pauses when window is hidden.</p>
+        <p class="muted">v<span id="appVersion">0.1.0</span> &middot; MIT licensed</p>
+      </main>
+
+      <footer class="tabs">
+        <button class="tab active" data-view="garden">Garden</button>
+        <button class="tab" data-view="shop">Shop</button>
+        <button class="tab" data-view="settings">Settings</button>
+      </footer>
+    </div>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
