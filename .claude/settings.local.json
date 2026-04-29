@@ -11,7 +11,10 @@
       "Bash(cargo --version)",
       "Bash(npm install *)",
       "Bash(npx tauri *)",
-      "Bash(taskkill //F //IM taskbar-garden.exe)"
+      "Bash(taskkill //F //IM taskbar-garden.exe)",
+      "Bash(xargs ls *)",
+      "Bash(node -c src/main.js)",
+      "Bash(node --check src/main.js)"
     ]
   }
 }

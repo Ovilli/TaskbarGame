@@ -1,20 +1,14 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use serde::{Deserialize, Serialize};
-use std::sync::Mutex;
+use serde::Serialize;
 use tauri::{
     include_image,
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
-    AppHandle, Emitter, LogicalPosition, LogicalSize, Manager, PhysicalPosition, WindowEvent,
+    AppHandle, Emitter, LogicalSize, Manager, PhysicalPosition, WindowEvent,
 };
 
-#[derive(Default)]
-struct AppState {
-    last_tray_pos: Mutex<Option<(f64, f64)>>,
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Clone, Debug)]
 struct Anchor {
     x: f64,
     y: f64,
@@ -48,13 +42,20 @@ fn toggle_window(app: &AppHandle, anchor: Option<Anchor>) {
         if y < 0.0 {
             y = a.y + 12.0;
         }
-        x = x.clamp(8.0, mw - w - 8.0);
-        y = y.clamp(8.0, mh - h - 8.0);
+        x = x.clamp(8.0, (mw - w - 8.0).max(8.0));
+        y = y.clamp(8.0, (mh - h - 8.0).max(8.0));
         let _ = win.set_position(PhysicalPosition::new(x, y));
     }
 
     let _ = win.show();
     let _ = win.set_focus();
+}
+
+fn force_show(app: &AppHandle) {
+    if let Some(win) = app.get_webview_window("main") {
+        let _ = win.show();
+        let _ = win.set_focus();
+    }
 }
 
 #[tauri::command]
@@ -76,15 +77,13 @@ fn quit_app(app: AppHandle) {
 
 #[tauri::command]
 fn set_window_size(app: AppHandle, width: f64, height: f64) {
-    if let Some(win) = app.get_webview_window("main") {
-        let _ = win.set_size(LogicalSize::new(width, height));
+    if !width.is_finite() || !height.is_finite() {
+        return;
     }
-}
-
-#[tauri::command]
-fn move_window_to(app: AppHandle, x: f64, y: f64) {
+    let w = width.clamp(300.0, 4096.0);
+    let h = height.clamp(440.0, 4096.0);
     if let Some(win) = app.get_webview_window("main") {
-        let _ = win.set_position(LogicalPosition::new(x, y));
+        let _ = win.set_size(LogicalSize::new(w, h));
     }
 }
 
@@ -100,36 +99,35 @@ fn install_panic_logger() {
     let prev = std::panic::take_hook();
     std::panic::set_hook(Box::new(move |info| {
         let path = std::env::temp_dir().join("taskbar-garden-crash.log");
-        let msg = format!(
-            "[{}] panic: {}\n",
-            chrono_like_now(),
-            info
-        );
-        let _ = std::fs::write(&path, msg);
+        let msg = format!("[{}] panic: {}\n", epoch_secs(), info);
+        if let Ok(mut f) = std::fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&path)
+        {
+            use std::io::Write;
+            let _ = f.write_all(msg.as_bytes());
+        }
         prev(info);
     }));
 }
 
-fn chrono_like_now() -> String {
+fn epoch_secs() -> u64 {
     use std::time::{SystemTime, UNIX_EPOCH};
-    let secs = SystemTime::now()
+    SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map(|d| d.as_secs())
-        .unwrap_or(0);
-    format!("epoch:{secs}")
+        .unwrap_or(0)
 }
 
 fn main() {
     install_panic_logger();
     tauri::Builder::default()
-        .plugin(tauri_plugin_store::Builder::default().build())
-        .manage(AppState::default())
         .invoke_handler(tauri::generate_handler![
             show_window,
             hide_window,
             quit_app,
-            set_window_size,
-            move_window_to
+            set_window_size
         ])
         .on_window_event(|win, event| {
             if let WindowEvent::CloseRequested { api, .. } = event {
@@ -154,8 +152,8 @@ fn main() {
                         }
                     }
                     "about" => {
+                        force_show(app);
                         let _ = app.emit("menu:about", ());
-                        toggle_window(app, None);
                     }
                     "quit" => app.exit(0),
                     _ => {}
@@ -169,10 +167,6 @@ fn main() {
                     } = event
                     {
                         let app = tray.app_handle();
-                        let state = app.state::<AppState>();
-                        if let Ok(mut last) = state.last_tray_pos.lock() {
-                            *last = Some((position.x, position.y));
-                        }
                         toggle_window(
                             app,
                             Some(Anchor {

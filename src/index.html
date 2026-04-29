@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Taskbar Garden</title>
+    <title>Mochi's Garden</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -11,7 +11,7 @@
       <header class="titlebar" data-tauri-drag-region>
         <div class="title" data-tauri-drag-region>
           <span class="title-icon" aria-hidden="true"></span>
-          <span class="title-text" data-tauri-drag-region>TASKBAR GARDEN</span>
+          <span class="title-text" data-tauri-drag-region>MOCHI'S GARDEN</span>
         </div>
         <button id="btnHide" class="title-btn" title="Hide (Esc)">X</button>
       </header>
@@ -21,6 +21,7 @@
           <span class="stat" title="Coins"><span class="pip pip-coin"></span><span id="coins">0</span></span>
           <span class="stat" title="Seeds"><span class="pip pip-seed"></span><span id="seedCount">0</span></span>
           <span class="stat" id="levelStat" title="Garden level">Lv 1</span>
+          <span class="stat stat-combo" id="comboStat" title="Combo - chain harvests fast for bonus" style="display:none">×1</span>
         </header>
 
         <main id="view-garden" class="view active">
@@ -45,10 +46,14 @@
             <canvas id="garden" width="240" height="240" aria-label="Garden plots"></canvas>
           </div>
 
-          <div class="hint" id="hint">Pick seed, click plot to plant.</div>
+          <div class="hint" id="hint">Pick a seed, plant it, watch it bloom! ♡</div>
         </main>
 
         <main id="view-shop" class="view">
+          <h2>QUESTS ♡</h2>
+          <ul id="questList" class="list"></ul>
+          <h2>MOCHI</h2>
+          <div id="bunnyPanel" class="bunny-panel"></div>
           <h2>SHOP</h2>
           <ul id="shopList" class="list"></ul>
           <h3>VISITOR</h3>
@@ -60,10 +65,6 @@
           <label class="row">
             <span>Sound</span>
             <input type="checkbox" id="optSound" />
-          </label>
-          <label class="row">
-            <span>Notifications</span>
-            <input type="checkbox" id="optNotify" />
           </label>
           <label class="row">
             <span>Anchor</span>
